@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Results - Online Voting</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Loading state styling */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Styling for the table */
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    /* Styling for no results message */
+    .no-results {
+      text-align: center;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🗳️ Voting Results</h2>
+
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <table id="resultsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Candidate</th>
+          <th>Party</th>
+          <th>Votes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Results will be populated here -->
+      </tbody>
+    </table>
+
+    <div class="no-results" id="noResults" style="display:none;">
+      <p>📭 No results available.</p>
+    </div>
+
+    <div class="navigation" style="margin-top: 20px;">
+      <a href="index.html">🏠 Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    const resultsTable = document.getElementById('resultsTable');
+    const loadingIndicator = document.getElementById('loading');
+    const noResultsMessage = document.getElementById('noResults');
+
+    // Fetch results from server
+    fetch('/results')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        loadingIndicator.style.display = 'none'; // Hide loading spinner
+        resultsTable.style.display = 'block';    // Show results table
+
+        // Check if valid array
+        if (!Array.isArray(data) || data.length === 0) {
+          resultsTable.style.display = 'none';    // Hide table if no data
+          noResultsMessage.style.display = 'block'; // Show no results message
+          return;
+        }
+
+        // Populate table with results
+        data.forEach(candidate => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${candidate.name}</td>
+            <td>${candidate.party}</td>
+            <td>${candidate.votes.toLocaleString()}</td>
+          `;
+          resultsTable.querySelector('tbody').appendChild(row);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching results:', error);
+        loadingIndicator.innerHTML = `
+          <p style="color: red; text-align: center;">⚠️ Failed to load results. Please try again later.</p>
+        `;
+      });
+  </script>
+</body>
+</html>

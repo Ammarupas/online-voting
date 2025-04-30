@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vote - Online Voting</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Logo / Banner -->
+    <div style="text-align: center;">
+      <img src="/images/logo.png" alt="Voting Logo" style="width: 100px; margin-bottom: 15px;" />
+    </div>
+
+    <!-- Heading -->
+    <h2>🗳️ Cast Your Vote</h2>
+
+    <!-- Success or error messages -->
+    <div id="message"></div>
+
+    <!-- Voting Form -->
+    <form id="voteForm" method="POST" action="/vote" onsubmit="return confirmVote();">
+      
+      <!-- Read-only Voter ID Field -->
+      <label for="voterId">Your Voter ID:</label>
+      <input type="text" name="voterId" id="voterId" required readonly placeholder="Auto-filled from login" />
+
+      <!-- Candidate Selection -->
+      <label for="candidateId">Select a Candidate:</label>
+      <select name="candidateId" id="candidateId" required>
+        <option value="" disabled selected>🔽 Choose a candidate</option>
+        <option value="1">🧑‍💼 Candidate 1 (Party A)</option>
+        <option value="2">👩‍💼 Candidate 2 (Party B)</option>
+        <option value="3">🧑‍🔧 Candidate 3 (Party C)</option>
+      </select>
+
+      <!-- Submit Button -->
+      <button type="submit">✅ Submit Vote</button>
+    </form>
+  </div>
+
+  <!-- Script Section -->
+  <script>
+    // Confirm before submitting the vote
+    function confirmVote() {
+      const selected = document.getElementById('candidateId').value;
+      if (!selected) {
+        document.getElementById('message').textContent = "⚠️ Please select a candidate.";
+        return false;
+      }
+
+      return confirm("Are you sure you want to cast your vote? This action is final.");
+    }
+
+    // Autofill voter ID from URL query param
+    const urlParams = new URLSearchParams(window.location.search);
+    const voterId = urlParams.get('voterId');
+
+    if (voterId && voterId.trim() !== "") {
+      document.getElementById('voterId').value = voterId;
+    } else {
+      alert("⚠️ You must log in first.");
+      window.location.href = "/login.html";
+    }
+  </script>
+</body>
+</html>

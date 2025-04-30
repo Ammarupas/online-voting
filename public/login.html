@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Online Voting</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Logo or Banner -->
+    <div style="text-align: center;">
+      <img src="/images/logo.png" alt="Voting Logo" style="width: 100px; margin-bottom: 20px;" />
+    </div>
+
+    <!-- Page Title -->
+    <h2>🔐 Login to Vote</h2>
+
+    <!-- Login Form -->
+    <form id="loginForm" method="POST" action="/auth/login">
+      <label for="email">📧 Email</label>
+      <input type="email" name="email" id="email" placeholder="Enter your email" required />
+
+      <label for="password">🔑 Password</label>
+      <input type="password" name="password" id="password" placeholder="Enter your password" required />
+
+      <button type="submit">➡️ Login</button>
+    </form>
+
+    <!-- Redirect to Register -->
+    <p style="margin-top: 15px;">
+      Don't have an account? <a href="register.html">📝 Register here</a>
+    </p>
+  </div>
+</body>
+</html>
